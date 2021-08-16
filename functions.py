@@ -1,8 +1,2 @@
-from tkinter import *
-def runtk(title):
-
-    window = Tk()
-
-    window.title(title)
-
-    window.mainloop()
+def add(a, b):
+    return a+b

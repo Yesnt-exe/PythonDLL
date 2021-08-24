@@ -18,7 +18,11 @@
 		Requirements:
 			-python 3.x + pyinstaller
 			-g++ c++ compiler
-		run build_windows.bat from cmd
+			-powershell
+
+		open POWERSHELL as administrator in PythonDLL directory
+		type Set-ExecutionPolicy RemoteSigned and then,
+		run build_windows.ps1
 		DLL will be saved in /out/libs/
 ## Addtional information:
 	Warning!

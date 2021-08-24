@@ -28,7 +28,7 @@ HANDLE StartApp(const char* appname)
     return;
     #else
     //windows stuff
-    STARTUPINFO info = {sizeof(info)};
+    STARTUPINFOA info = {sizeof(info)};
     PROCESS_INFORMATION pinfo;
     info.hStdError = GetStdHandle(STD_ERROR_HANDLE);
     info.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);

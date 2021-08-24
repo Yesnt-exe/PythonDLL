@@ -1,5 +1,4 @@
-echo This app require wine windows emulator!
-echo Please ensure you have installed pyinstaller or ran prepare_linux/window before running this script!
+echo Building...
 pyinstaller pybuild.py --onefile --noconsole
 cp dist/pybuild ./pydll
 rm build -r

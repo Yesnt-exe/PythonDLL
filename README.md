@@ -1,27 +1,30 @@
-build_windows.bat was not yet tested, windows windows version was not yet testet/compiled and might not even compile!
-Linux version was compiled and tested
-On linux function input() does not work!
 
+## Where to write code?:
 
-How to use?
+	Its simple, just write your code as functions in file named "functions.py",
+	after building these functions will be callable from your DLL
 
-Before building you must have installed pyinstaller with pip3/pip
-On linux you need to have wine emulator installed
+## How to build?:
 
-Just write your functions in functions.py
+	Linux:
+		Requirements:
+			-wine
+			-python 3.x + pyinstaller
+			-g++ c++ compiler
+		run sh build_linux.sh from terminal
+		DLL will be saved in /out/libs/
 
-example:
-def a():
-	return 5
-Run sh build_linux or build_windows.bat
+	Windows:
+		Requirements:
+			-python 3.x + pyinstaller
+			-g++ c++ compiler
+		run build_windows.bat from cmd
+		DLL will be saved in /out/libs/
+## Addtional information:
+	Warning!
+	Linux version uses system() function so it might be unsafe!
 
-Build library location: lib/
-Header location: include/
-
-Next in c++/c you just link library from lib/ and include header from include
-
-Warning:
-
-You must prepare binary before using ExecuteFunction by calling PrepareBinary() (you do it just once)
-
-After calling all python functions you can call RemoveBinary(), this will undo PrepareBinary()
+	Functions that does not work:
+		printf() <- Does not work on Windows version
+		input() <- Does not work on both versions
+![](https://www.python.org/static/community_logos/python-powered-w-100x40.png)

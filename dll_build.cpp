@@ -10,12 +10,29 @@
 #include <unistd.h>
 #else
 #include <Windows.h>
-#include <iostream>
+HANDLE _pstdout;
+HANDLE _pstdoutr;
 #endif
 
 using namespace std;
 
-#ifdef __unix
+#ifndef __unix__
+extern "C" char* win_rstdout(int* _len){
+    FILE* readout = fopen("_stdout", "r");
+    fseek(readout, 0, SEEK_END);
+    size_t len = ftell(readout);
+    rewind(readout);
+    char* data = (char*)malloc(len + 1);
+    data[fread(data, 1, len, readout)] = '\0';
+    fclose(readout);
+    *_len = (int)len;
+    remove("_stdout");
+    return data;
+}
+#endif
+
+
+#ifdef __unix__
 void StartApp(const char* appname)
 #else
 HANDLE StartApp(const char* appname)
@@ -27,19 +44,22 @@ HANDLE StartApp(const char* appname)
     system(string(data + "& > /dev/null").c_str());
     return;
     #else
-    //windows stuff
+    //create pipe
+    SECURITY_ATTRIBUTES pattr;
+    ZeroMemory(&pattr, sizeof(pattr)); //clear mem
+    pattr.bInheritHandle = FALSE;
+    pattr.nLength = sizeof(pattr);
+    pattr.lpSecurityDescriptor = NULL;
+    CreatePipe(&_pstdoutr, &_pstdout, &pattr, 0); // create pipe
     STARTUPINFOA info = {sizeof(info)};
     PROCESS_INFORMATION pinfo;
-    info.hStdError = GetStdHandle(STD_ERROR_HANDLE);
-    info.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-    info.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    info.hStdError = _pstdout; // stderr to stdout
+    info.hStdOutput = _pstdout; // stdout to stdout
+    info.hStdInput = NULL;
     CreateProcessA(appname, NULL, NULL, NULL, TRUE, 0, NULL, NULL, &info, &pinfo);
     return pinfo.hProcess;
     #endif
 }
-
-
-
 
 extern "C" void PrepareBinary(){
     FILE* fptr = fopen("pydll.exe", "wb");
@@ -65,12 +85,18 @@ extern "C" const char* ExecuteFunction(const char* functionname,const char* args
     }
     #else
     HANDLE hndl = StartApp("pydll.exe");
-    //windows
+    
     BOOL isrunning = true;
     while(isrunning){
         DWORD ret = WaitForSingleObject(hndl, 0);
         isrunning = ret == WAIT_TIMEOUT;
+        if(isrunning){
+            //ReadStdout(stdout, 32); //not working
+        }
+        this_thread::sleep_for(std::chrono::milliseconds(30));
     }
+    CloseHandle(_pstdoutr);
+    CloseHandle(_pstdout);
     CloseHandle(hndl);
     #endif
     ifstream rd("_resp_", ifstream::in);
@@ -81,7 +107,7 @@ extern "C" const char* ExecuteFunction(const char* functionname,const char* args
         data += "\n";
 
     }
-    rd.close();
+    rd.close(); 
     return data.c_str();
 }
 extern "C" string ExecuteFunction_str(const char* functionname,const char* args){
@@ -103,7 +129,10 @@ extern "C" string ExecuteFunction_str(const char* functionname,const char* args)
     while(isrunning){
         DWORD ret = WaitForSingleObject(hndl, 0);
         isrunning = ret == WAIT_TIMEOUT;
+        this_thread::sleep_for(std::chrono::milliseconds(30));
     }
+    CloseHandle(_pstdoutr);
+    CloseHandle(_pstdout);
     CloseHandle(hndl);
     #endif
     ifstream rd("_resp_", ifstream::in);

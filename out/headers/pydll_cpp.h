@@ -1,7 +1,5 @@
 #include <string>
 
-typedef unsigned long size_t;
-
 extern "C"{
 
 //Calls a function named (functionname) with args (args) and returns function return value converted to string as const char*
@@ -21,6 +19,11 @@ extern const char* ExecuteFunction(const char* functionname, const char* args);
 //function called = add(2,5)
 //return value is (const char*)"7"
 extern std::string ExecuteFunction_str(const char* functionname, const char* args);
+
+#ifndef __unix__
+//only on windows, read stdout
+extern char* win_rstdout(int* lenght);
+#endif
 
 //This removes pydll.exe/pydll
 extern void RemoveBinary();

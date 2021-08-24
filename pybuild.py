@@ -1,4 +1,9 @@
-from os import remove
+import os, sys
+if os.name == "nt":
+	fl = open("_stdout", "w")
+	sys.stderr = fl
+	sys.stdout = fl
+
 from functions import *
 
 func = ""
@@ -8,7 +13,7 @@ try:
 		func = read.readline()
 		args = read.readline()
 		read.close()
-	remove("_info_")
+	os.remove("_info_")
 	returndata = ""
 	try:
 		exec("returndata = str(" + func + "(" + args + "))")

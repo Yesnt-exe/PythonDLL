@@ -1,5 +1,3 @@
-typedef unsigned long size_t;
-
 //Calls a function named (functionname) with args (args) and returns function return value converted to string as const char*
 //for example 
 //(functionname) = add
@@ -9,6 +7,11 @@ typedef unsigned long size_t;
 
 //WARNING This function might return garbage instead of return value
 extern const char* ExecuteFunction(const char* functionname, const char* args);
+
+#ifndef __unix__
+//only on windows, read stdout
+extern char* win_rstdout(int* lenght);
+#endif
 
 //This removes pydll.exe/pydll
 extern void RemoveBinary();

@@ -29,6 +29,6 @@
 	Linux version uses system() function so it might be unsafe!
 
 	Functions that does not work:
-		printf() <- Does not work on Windows version
+		printf() <- Full support on linux, on windows you need to use win_rstdout() function to get stdout
 		input() <- Does not work on both versions
 ![](https://www.python.org/static/community_logos/python-powered-w-100x40.png)

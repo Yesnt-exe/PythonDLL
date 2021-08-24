@@ -10,12 +10,17 @@
 #include <unistd.h>
 #else
 #include <Windows.h>
+#include <iostream>
 #endif
 
 using namespace std;
 
-
-void StartApp(const char* appname){
+#ifdef __unix
+void StartApp(const char* appname)
+#else
+HANDLE StartApp(const char* appname)
+#endif
+{
     #ifdef __unix__
     string data = string(appname);
     system(string(string("chmod 777 ") + data).c_str());
@@ -23,7 +28,13 @@ void StartApp(const char* appname){
     return;
     #else
     //windows stuff
-    ShellExecuteA(0,"open",appname,NULL,NULL,SW_HIDE);
+    STARTUPINFO info = {sizeof(info)};
+    PROCESS_INFORMATION pinfo;
+    info.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+    info.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    info.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    CreateProcessA(appname, NULL, NULL, NULL, TRUE, 0, NULL, NULL, &info, &pinfo);
+    return pinfo.hProcess;
     #endif
 }
 
@@ -49,12 +60,19 @@ extern "C" const char* ExecuteFunction(const char* functionname,const char* args
     #ifdef __unix__
     remove("_resp_");
     StartApp("./pydll.exe");
-    #else
-    StartApp("pydll.exe");
-    #endif
     while(access("_resp_", F_OK)){
         this_thread::sleep_for(chrono::milliseconds(30));
     }
+    #else
+    HANDLE hndl = StartApp("pydll.exe");
+    //windows
+    BOOL isrunning = true;
+    while(isrunning){
+        DWORD ret = WaitForSingleObject(hndl, 0);
+        isrunning = ret == WAIT_TIMEOUT;
+    }
+    CloseHandle(hndl);
+    #endif
     ifstream rd("_resp_", ifstream::in);
     string data;
     string line;
@@ -75,12 +93,19 @@ extern "C" string ExecuteFunction_str(const char* functionname,const char* args)
     #ifdef __unix__
     remove("_resp_");
     StartApp("./pydll.exe");
-    #else
-    StartApp("pydll.exe");
-    #endif
     while(access("_resp_", F_OK)){
         this_thread::sleep_for(chrono::milliseconds(30));
     }
+    #else
+    HANDLE hndl = StartApp("pydll.exe");
+    //windows
+    BOOL isrunning = true;
+    while(isrunning){
+        DWORD ret = WaitForSingleObject(hndl, 0);
+        isrunning = ret == WAIT_TIMEOUT;
+    }
+    CloseHandle(hndl);
+    #endif
     ifstream rd("_resp_", ifstream::in);
     string data;
     string line;

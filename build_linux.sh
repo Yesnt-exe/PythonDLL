@@ -1,4 +1,6 @@
 echo Building...
+python PreProcess.py
+python RunCode.py
 pyinstaller pybuild.py --onefile --noconsole
 cp dist/pybuild ./pydll
 rm build -r

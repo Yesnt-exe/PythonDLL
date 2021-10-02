@@ -1,4 +1,7 @@
 echo Building...
+
+python PreProcess.py
+python RunCode.py
 pyinstaller --onefile --noconsole pybuild.py
 cp .\dist\pybuild.exe ./pydll
 del build -r

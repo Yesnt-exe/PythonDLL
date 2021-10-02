@@ -3,6 +3,7 @@
 
 	Its simple, just write your code as functions in file named "functions.py",
 	after building these functions will be callable from your DLL
+	You can call functions by using GeneratedCode.hpp with c++, defined functions from functions.py will be exported there but some of the functions might not export when that happens you can still use them with ExecuteFunction()
 
 ## How to build?:
 

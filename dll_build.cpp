@@ -110,7 +110,9 @@ extern "C" const char* ExecuteFunction(const char* functionname,const char* args
     rd.close(); 
     return data.c_str();
 }
-extern "C" string ExecuteFunction_str(const char* functionname,const char* args){
+extern "C" string ExecuteFunction_str(std::string fname, std::string ar){
+    const char* functionname = fname.c_str();
+    const char* args = ar.c_str();
     FILE* fptr = fopen("_info_", "w");
     fwrite(functionname, 1,strlen(functionname), fptr);
     fputc('\n', fptr);

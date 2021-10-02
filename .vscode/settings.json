@@ -5,6 +5,9 @@
         "thread": "cpp",
         "iostream": "cpp",
         "iosfwd": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "array": "cpp",
+        "vector": "cpp",
+        "xutility": "cpp"
     }
 }

@@ -18,7 +18,7 @@ extern const char* ExecuteFunction(const char* functionname, const char* args);
 //(args) = 2,5
 //function called = add(2,5)
 //return value is (const char*)"7"
-extern std::string ExecuteFunction_str(const char* functionname, const char* args);
+extern std::string ExecuteFunction_str(std::string functionname, std::string args);
 
 #ifndef __unix__
 //only on windows, read stdout

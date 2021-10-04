@@ -33,4 +33,8 @@
 	Functions that does not work:
 		printf() <- Full support on linux, on windows you need to use win_rstdout() function to get stdout
 		input() <- Does not work on both versions
+## Planned Updates:
+	-Running Python code without waiting for python to end, there will be function DynamicExecute which will allow to start a thread in Python and run code passed as an function argument
+	-Support for function to be called at DllMain
+	-Allocating, Deallocating, Writing, Reading memory at specified adresses
 ![](https://www.python.org/static/community_logos/python-powered-w-100x40.png)

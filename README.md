@@ -28,6 +28,7 @@
 ## Addtional information:
 	Warning!
 	Linux version uses system() function so it might be unsafe!
+	Remember that auto header generation is experimental and might not work properly!
 
 	Functions that does not work:
 		printf() <- Full support on linux, on windows you need to use win_rstdout() function to get stdout
